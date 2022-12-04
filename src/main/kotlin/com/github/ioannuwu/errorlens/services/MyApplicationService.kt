@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.ioannuwu.errorlens.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.ioannuwu.errorlens.MyBundle
 
 class MyApplicationService {
 
