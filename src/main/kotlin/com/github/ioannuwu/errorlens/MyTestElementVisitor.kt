@@ -1,5 +1,6 @@
 package com.github.ioannuwu.errorlens
 
+import com.intellij.codeInspection.GlobalInspectionUtil
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
@@ -9,8 +10,14 @@ import com.intellij.openapi.editor.colors.EditorFontType
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.tree.IElementType
+import com.intellij.psi.util.elementType
+import com.intellij.psi.util.hasErrorElementInRange
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import com.jetbrains.rd.util.printlnError
@@ -21,32 +28,60 @@ import javax.swing.Icon
 
 class MyTestElementVisitor(
     private val fileEditorManager: FileEditorManager,
-    private val application: Application,
 ) : PsiElementVisitor() {
 
-    override fun visitErrorElement(element: PsiErrorElement) {
+    override fun visitFile(file: PsiFile) {
+
+        printlnError("visitFile: ACTIVATED")
+
+        val errors = seekRecAndPrintErrors(file)
 
         ApplicationManager.getApplication().invokeLater {
             val selectedEditor = fileEditorManager.selectedTextEditor ?: return@invokeLater
 
-            val startOffset = element.startOffset
-            val endOffset = element.endOffset
+            selectedEditor.inlayModel.getAfterLineEndElementsInRange(0, file.endOffset).forEach { it.dispose() }
+            selectedEditor.markupModel.allHighlighters.forEach { it.dispose() }
 
-            val description = element.errorDescription
+            errors.forEach {error ->
 
-            val line = selectedEditor.document.getLineNumber(startOffset)
+                val startOffset = error.startOffset
+                val description = error.errorDescription
+                val line = selectedEditor.document.getLineNumber(startOffset)
 
-            val hint = HintData(line, description)
+                val hint = HintData(line, description)
 
-            selectedEditor.inlayModel.addAfterLineEndElement(
-                    startOffset,
-                    false,
-                    hint
-            )
+                selectedEditor.inlayModel.addAfterLineEndElement(startOffset,
+                        false, hint)
 
-            selectedEditor.markupModel.addLineHighlighter(line, 0, MyTextAttributes(hint))
+                selectedEditor.markupModel.addLineHighlighter(line, 0, MyTextAttributes(hint))
+            }
+
+
+            // it.hasErrorElementInRange()
         }
+
+        errors.forEach { error ->
+            printlnError("""
+                === CHILD OF LILITH ====
+                ${error.errorDescription}
+                ${error.text}
+            """.trimIndent())
+
+        }
+
     }
+}
+
+private fun seekRecAndPrintErrors(file: PsiFile, elem: PsiElement = file): Set<PsiErrorElement> {
+
+    val errorElements = mutableSetOf<PsiErrorElement>()
+
+    if (elem is PsiErrorElement) {
+        errorElements.add(elem)
+    }
+    elem.children.forEach { errorElements.addAll(seekRecAndPrintErrors(file, it)) }
+
+    return errorElements
 }
 
 class MyTextAttributes(hint: BackGroundColor) : TextAttributes(

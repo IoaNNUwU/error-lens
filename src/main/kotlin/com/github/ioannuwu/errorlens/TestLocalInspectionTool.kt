@@ -8,11 +8,6 @@ import com.intellij.psi.PsiElementVisitor
 
 class TestLocalInspectionTool: LocalInspectionTool() {
 
-    private lateinit var fileEditorManager: FileEditorManager
-    private val application = ApplicationManager.getApplication()
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        fileEditorManager = FileEditorManager.getInstance(holder.project)
-        return MyTestElementVisitor(fileEditorManager, application)
-    }
+    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean) =
+            MyTestElementVisitor(FileEditorManager.getInstance(holder.project))
 }
