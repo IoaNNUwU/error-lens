@@ -1,23 +1,21 @@
 package com.github.ioannuwu.errorlens
 
-import com.intellij.codeInspection.GlobalInspectionUtil
+import com.intellij.codeInsight.daemon.impl.HighlightInfo
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrar
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorCustomElementRenderer
 import com.intellij.openapi.editor.Inlay
 import com.intellij.openapi.editor.colors.EditorFontType
+import com.intellij.openapi.editor.impl.DocumentMarkupModel
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.tree.IElementType
-import com.intellij.psi.util.elementType
-import com.intellij.psi.util.hasErrorElementInRange
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import com.jetbrains.rd.util.printlnError
@@ -32,56 +30,46 @@ class MyTestElementVisitor(
 
     override fun visitFile(file: PsiFile) {
 
-        printlnError("visitFile: ACTIVATED")
-
-        val errors = seekRecAndPrintErrors(file)
-
         ApplicationManager.getApplication().invokeLater {
-            val selectedEditor = fileEditorManager.selectedTextEditor ?: return@invokeLater
+
+            val highlighters = DocumentMarkupModel
+                    .forDocument(file.viewProvider.document, file.project, false)
+                    .allHighlighters
+
+            highlighters.forEach { printlnError("it: $it") }
+
+            val selectedEditor = fileEditorManager.selectedTextEditor
+            if (selectedEditor == null) {
+                printlnError("Selected editor is null")
+                return@invokeLater
+            }
 
             selectedEditor.inlayModel.getAfterLineEndElementsInRange(0, file.endOffset).forEach { it.dispose() }
             selectedEditor.markupModel.allHighlighters.forEach { it.dispose() }
 
-            errors.forEach {error ->
+            highlighters.asSequence()
+                    .filterNotNull()
+                    .filter { it.errorStripeTooltip is HighlightInfo }
+                    .map { it.errorStripeTooltip as HighlightInfo }
+                    .filter { it.severity.toString() != "SYMBOL_TYPE_SEVERITY" }
+                    .forEach { info ->
 
-                val startOffset = error.startOffset
-                val description = error.errorDescription
-                val line = selectedEditor.document.getLineNumber(startOffset)
+                        printlnError("info: $info")
+                        val startOffset = info.startOffset
+                        val description = info.description ?: "Description is null"
+                        val line = selectedEditor.document.getLineNumber(startOffset)
 
-                val hint = HintData(line, description)
+                        val hint = HintData(line, description)
 
-                selectedEditor.inlayModel.addAfterLineEndElement(startOffset,
-                        false, hint)
+                        if (selectedEditor.inlayModel.getAfterLineEndElementsForLogicalLine(line).isEmpty()) {
+                            selectedEditor.inlayModel.addAfterLineEndElement(startOffset, false, hint)
+                        }
+                        selectedEditor.markupModel.addLineHighlighter(line, 0, MyTextAttributes(hint))
 
-                selectedEditor.markupModel.addLineHighlighter(line, 0, MyTextAttributes(hint))
-            }
-
-
-            // it.hasErrorElementInRange()
+                    }
+            printlnError("CLOWN ENDED")
         }
-
-        errors.forEach { error ->
-            printlnError("""
-                === CHILD OF LILITH ====
-                ${error.errorDescription}
-                ${error.text}
-            """.trimIndent())
-
-        }
-
     }
-}
-
-private fun seekRecAndPrintErrors(file: PsiFile, elem: PsiElement = file): Set<PsiErrorElement> {
-
-    val errorElements = mutableSetOf<PsiErrorElement>()
-
-    if (elem is PsiErrorElement) {
-        errorElements.add(elem)
-    }
-    elem.children.forEach { errorElements.addAll(seekRecAndPrintErrors(file, it)) }
-
-    return errorElements
 }
 
 class MyTextAttributes(hint: BackGroundColor) : TextAttributes(
@@ -134,8 +122,8 @@ class HintData(private val line: Int, private val description: String):
 data class Property(val icon: Icon, val backgroundColor: Color, val textColor: Color)
 
 fun choseProperty(description: String) = when (description) {
-    "';' expected" -> Property(AllIcons.General.Error, Color.RED, Color.ORANGE)
-    else -> Property(AllIcons.General.Information, Color.WHITE, Color.BLUE)
+    "';' expected" -> Property(AllIcons.General.Error, Color(50, 0, 0, 50), Color.ORANGE)
+    else -> Property(AllIcons.General.Information, Color(255, 255, 255, 50), Color.BLUE)
 }
 
 interface Description {
