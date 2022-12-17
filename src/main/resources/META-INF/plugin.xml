@@ -13,7 +13,7 @@
                 groupPath="SDK"
                 enabledByDefault="true"
                 level="ERROR"
-                implementationClass="com.github.ioannuwu.errorlens.TestLocalInspectionTool"/>
+                implementationClass="com.github.ioannuwu.errorlens.MyLocalInspectionTool"/>
     </extensions>
 
 </idea-plugin>
