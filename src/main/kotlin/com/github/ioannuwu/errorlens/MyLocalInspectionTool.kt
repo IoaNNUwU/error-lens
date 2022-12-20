@@ -8,5 +8,5 @@ import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.rd.util.printlnError
 
 class MyLocalInspectionTool: LocalInspectionTool() {
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean) = MyElementVisitor(FileEditorManager.getInstance(holder.project))
+    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean) = MyElementVisitor()
 }
