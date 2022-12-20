@@ -27,6 +27,7 @@ private fun selectData(highlightInfo: HighlightInfo) = when (highlightInfo.sever
     HighlightSeverity.INFORMATION ->
         ErrorDataImpl(Color(35, 35, 35), Color(200, 200, 200), AllIcons.General.Information)
     else ->
+        // TYPO etc
         ErrorDataImpl(Color.RED, Color.ORANGE, AllIcons.General.Error)
 }
 

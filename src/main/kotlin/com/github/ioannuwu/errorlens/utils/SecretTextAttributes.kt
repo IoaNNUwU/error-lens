@@ -13,14 +13,17 @@ class SecretTextAttributes(backgroundColor: Color): TextAttributes(
 ) {
 
     companion object {
-        fun isSecret(attributes: TextAttributes) =
-                attributes.effectType == secretEffectType
-                        && attributes.foregroundColor == secretForegroundColor
-                        && attributes.effectColor == secretEffectColor
-                        && attributes.fontType == secretFontType }
+        fun isSecret(attributes: TextAttributes?): Boolean {
+            if (attributes == null) return false
+            return attributes.effectType == secretEffectType
+                    && attributes.foregroundColor == secretForegroundColor
+                    && attributes.effectColor == secretEffectColor
+                    && attributes.fontType == secretFontType
+        }
+    }
 }
 
-private val secretForegroundColor = Color(211,182,126)
+private val secretForegroundColor = null
 private val secretEffectColor = Color(234,212,125)
 private val secretEffectType = null
-private const val secretFontType = 15
+private const val secretFontType = 832501479
