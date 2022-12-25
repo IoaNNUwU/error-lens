@@ -1,6 +1,6 @@
 package com.github.ioannuwu.errorlens
 
-import com.github.ioannuwu.errorlens.errorRender.highligtersSelector.OnePerLineWithHighestPriority
+import com.github.ioannuwu.errorlens.errorRender.OnePerLineWithHighestPriority
 import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderDataSelectorImpl
 import com.github.ioannuwu.errorlens.gui.MySettingsService
 import com.intellij.codeInspection.LocalInspectionTool

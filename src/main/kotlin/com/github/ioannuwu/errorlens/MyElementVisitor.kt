@@ -1,13 +1,11 @@
 package com.github.ioannuwu.errorlens
 
-import com.github.ioannuwu.errorlens.errorRender.highligtersSelector.HighlightersSelector
-import com.github.ioannuwu.errorlens.errorRender.inlineHighlightModel.LineHighlightMarkupModel
-import com.github.ioannuwu.errorlens.errorRender.inlineRenderer.MyCustomHighlighterRenderer
+import com.github.ioannuwu.errorlens.errorRender.HighlightersSelector
+import com.github.ioannuwu.errorlens.errorRender.LineHighlightModel
+import com.github.ioannuwu.errorlens.errorRender.MyCustomHighlighterRenderer
+import com.github.ioannuwu.errorlens.errorRender.SecretLock
 import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderData
 import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderDataSelector
-import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderDataSelectorImpl
-import com.github.ioannuwu.errorlens.errorRender.secretLock.TextAttributesSecretLock
-import com.github.ioannuwu.errorlens.gui.MySettingsService
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.impl.DocumentMarkupModel
@@ -27,8 +25,8 @@ class MyElementVisitor(
         val markupModel = DocumentMarkupModel.forDocument(file.viewProvider.document,
                 file.project, false) ?: return@invokeLater
 
-        val lock = TextAttributesSecretLock()
-        val lineHighlightModel = LineHighlightMarkupModel(markupModel, lock)
+        val lock: SecretLock = SecretLock.TextAttributesSecretLock
+        val lineHighlightModel: LineHighlightModel = LineHighlightModel.MarkupModel(markupModel, lock)
 
         lineHighlightModel.removeLineHighlighters()
 

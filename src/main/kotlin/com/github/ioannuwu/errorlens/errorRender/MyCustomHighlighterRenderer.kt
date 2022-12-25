@@ -1,4 +1,4 @@
-package com.github.ioannuwu.errorlens.errorRender.inlineRenderer
+package com.github.ioannuwu.errorlens.errorRender
 
 import com.github.ioannuwu.errorlens.MyCustomIconRenderer
 import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderDataSelector
