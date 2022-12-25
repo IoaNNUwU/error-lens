@@ -14,6 +14,16 @@
                 enabledByDefault="true"
                 level="ERROR"
                 implementationClass="com.github.ioannuwu.errorlens.MyLocalInspectionTool"/>
+
+        <applicationConfigurable
+            parentId="appearance"
+            instance="com.github.ioannuwu.errorlens.gui.MyErrorConfigurable"
+            id="com.github.ioannuwu.errorlens.gui.MyErrorConfigurable"
+            displayName="Error Lens (Inline Hints)"/>
+
+        <applicationService
+                serviceImplementation="com.github.ioannuwu.errorlens.gui.MySettingsService"/>
+
     </extensions>
 
 </idea-plugin>
