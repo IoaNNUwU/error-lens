@@ -1,6 +1,5 @@
 package com.github.ioannuwu.errorlens.errorRender
 
-import com.github.ioannuwu.errorlens.MyCustomIconRenderer
 import com.github.ioannuwu.errorlens.errorRender.renderData.ErrorRenderDataSelector
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.openapi.editor.Editor

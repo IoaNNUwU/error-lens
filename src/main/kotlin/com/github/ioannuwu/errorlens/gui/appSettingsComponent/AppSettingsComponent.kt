@@ -4,6 +4,9 @@ import com.github.ioannuwu.errorlens.appearance.DefaultSettingsList
 import com.github.ioannuwu.errorlens.gui.HighlightComponentSelector
 import com.github.ioannuwu.errorlens.gui.MySettingsService
 import com.github.ioannuwu.errorlens.gui.SettingsState
+import com.intellij.codeInspection.InspectionApplication
+import com.intellij.codeInspection.InspectionToolProvider
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.ContextHelpLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBTextField

@@ -8,7 +8,6 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.application.ApplicationManager
 
 class MyLocalInspectionTool : LocalInspectionTool() {
-
     private val settingsService = ApplicationManager.getApplication().getService(MySettingsService::class.java)
     private val highlightersSelector = HighlightersSelector.OnePerLineWithHighestPriority()
     private val errorDataSelector = ErrorRenderDataSelector.DataSelectorFromSettingsService(settingsService)
