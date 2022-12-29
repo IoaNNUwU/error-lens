@@ -7,6 +7,7 @@ import com.github.ioannuwu.errorlens.ui.components.utils.TypeSettingsState
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.Label
+import java.awt.Color
 import javax.swing.JPanel
 
 private const val gutterIconText = "Gutter icon"
@@ -51,6 +52,13 @@ class ErrorTypeComponent(data: Data) : MyComponent(), TypeSettingsState {
             add(textColorPanel)
         }
         builder.addComponent(panel3)
+
+        gutterIconCheckBox.isSelected = data.errorTypeSettingsState.showGutterIcon
+        textCheckBox.isSelected = data.errorTypeSettingsState.showText
+        backgroundCheckBox.isSelected = data.errorTypeSettingsState.showBackground
+
+        textColorPanel.selectedColor = Color(data.errorTypeSettingsState.textColor)
+        backgroundColorPanel.selectedColor = Color(data.errorTypeSettingsState.backgroundColor)
 
         this.add(builder.build())
     }

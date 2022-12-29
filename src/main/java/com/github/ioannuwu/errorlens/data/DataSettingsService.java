@@ -5,16 +5,15 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @State(name = "com.github.ioannuwu.errorlens.data.MySettingsState",
         storages = @Storage("com.github.ioannuwu.errorlens.settings.xml"))
 public class DataSettingsService implements PersistentStateComponent<SettingsState> {
 
-    private SettingsState myState;
+    private final SettingsState myState = new SettingsState();
 
     @Override
-    public com.github.ioannuwu.errorlens.data.@Nullable SettingsState getState() {
+    public @NotNull SettingsState getState() {
         return myState;
     }
 
