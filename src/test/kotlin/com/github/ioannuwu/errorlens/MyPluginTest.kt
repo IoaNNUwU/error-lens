@@ -1,23 +1,17 @@
 package com.github.ioannuwu.errorlens
 
-import com.intellij.ide.highlighter.XmlFileType
-import com.intellij.openapi.components.service
-import com.intellij.psi.xml.XmlFile
+import com.github.ioannuwu.errorlens.domain.HideListParser
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.intellij.util.PsiErrorElementUtil
+import com.jetbrains.rd.util.printlnError
+import junit.framework.TestCase
+import org.junit.Test
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
 class MyPluginTest : BasePlatformTestCase() {
 
-    fun testXMLFile() {
+    @Test
+    fun testTest() {
+        TestCase.assertEquals(1, 1)
     }
-
-    fun testRename() {
-    }
-
-    fun testProjectService() {
-    }
-
-    override fun getTestDataPath() = "src/test/testData/rename"
 }
