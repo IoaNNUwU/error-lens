@@ -14,7 +14,7 @@ private const val gutterIconText = "Gutter icon"
 private const val backgroundColorText = "Background color"
 private const val textColorText = "Text color"
 
-class ErrorTypeComponent(data: Data) : MyComponent(), TypeSettingsState {
+open class ErrorTypeComponent(data: Data) : MyComponent(), TypeSettingsState {
 
     data class Data(
             val name: String, val helpDescription: String, val errorTypeSettingsState: ErrorTypeSettingsState
@@ -32,6 +32,7 @@ class ErrorTypeComponent(data: Data) : MyComponent(), TypeSettingsState {
 
         val namePanel = JPanel()
         namePanel.add(Label(data.name, bold = true))
+        builder.addComponent(namePanel)
 
         val panel15 = JPanel()
         panel15.add(gutterIconCheckBox)

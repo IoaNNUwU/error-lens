@@ -16,7 +16,7 @@ public class SettingsState {
     public @NotNull ErrorTypeSettingsState information = DefaultSettingsList.INFORMATION;
     public @NotNull ErrorTypeSettingsState other = DefaultSettingsList.OTHER;
 
-    public @NotNull List<String> ignoreList = DefaultSettingsList.IGNORE_LIST;
+    public @NotNull List<String> hideList = DefaultSettingsList.IGNORE_LIST;
 
     public static class ErrorTypeSettingsState {
 
@@ -45,6 +45,30 @@ public class SettingsState {
             this.showText = dataState.showText;
             this.showGutterIcon = dataState.showGutterIcon;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ErrorTypeSettingsState that = (ErrorTypeSettingsState) o;
+            return showGutterIcon == that.showGutterIcon && showBackground == that.showBackground && backgroundColor == that.backgroundColor && showText == that.showText && textColor == that.textColor;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(showGutterIcon, showBackground, backgroundColor, showText, textColor);
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorTypeSettingsState{" +
+                    "showGutterIcon=" + showGutterIcon +
+                    ", showBackground=" + showBackground +
+                    ", backgroundColor=" + backgroundColor +
+                    ", showText=" + showText +
+                    ", textColor=" + textColor +
+                    '}';
+        }
     }
 
     @Override
@@ -55,11 +79,24 @@ public class SettingsState {
         return numberOfWhitespaces == that.numberOfWhitespaces && error.equals(that.error)
                 && warning.equals(that.warning) && weakWarning.equals(that.weakWarning)
                 && information.equals(that.information) && other.equals(that.other)
-                && ignoreList.equals(that.ignoreList);
+                && hideList.equals(that.hideList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numberOfWhitespaces, error, warning, weakWarning, information, other, ignoreList);
+        return Objects.hash(numberOfWhitespaces, error, warning, weakWarning, information, other, hideList);
+    }
+
+    @Override
+    public String toString() {
+        return "SettingsState{" +
+                "numberOfWhitespaces=" + numberOfWhitespaces +
+                ", error=" + error +
+                ", warning=" + warning +
+                ", weakWarning=" + weakWarning +
+                ", information=" + information +
+                ", other=" + other +
+                ", ignoreList=" + hideList +
+                '}';
     }
 }

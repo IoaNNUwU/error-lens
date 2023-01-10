@@ -11,6 +11,7 @@ class HideListComponent(hideList: List<String>, parser: HideListParser): MyCompo
     init {
         val hideString = parser.parseToString(hideList)
         myHideList = JBTextField(hideString, 35)
+        add(myHideList)
     }
 
     override var hideList: String =

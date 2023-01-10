@@ -19,7 +19,8 @@ interface HideListParser {
         }
 
         override fun parseToString(list: List<String>): String {
-            return list.joinToString("', '")
+            val temp = list.joinToString("', '")
+            return "'$temp'"
         }
     }
 }

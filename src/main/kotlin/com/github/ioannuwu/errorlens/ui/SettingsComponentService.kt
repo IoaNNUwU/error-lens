@@ -1,6 +1,6 @@
 package com.github.ioannuwu.errorlens.ui
 
-import com.github.ioannuwu.errorlens.data.DataSettingsService
+import com.github.ioannuwu.errorlens.data.AbstractDataSettingsService
 import com.github.ioannuwu.errorlens.data.SettingsState
 import com.github.ioannuwu.errorlens.data.defaultsettings.DefaultSettingsList
 import com.github.ioannuwu.errorlens.domain.HideListParser
@@ -10,10 +10,11 @@ import com.github.ioannuwu.errorlens.ui.components.NameComponent
 import com.github.ioannuwu.errorlens.ui.components.NumberOfWhitespacesComponent
 import com.github.ioannuwu.errorlens.ui.components.errors.ErrorTypeComponent
 import com.github.ioannuwu.errorlens.ui.components.errors.ErrorTypesComponent
+import com.jetbrains.rd.util.printlnError
 import javax.swing.JComponent
 
 class SettingsComponentService(
-        dataSettingsService: DataSettingsService,
+        dataSettingsService: AbstractDataSettingsService,
         private val hideListParser: HideListParser,
 ) {
 
@@ -37,7 +38,7 @@ class SettingsComponentService(
             "Other", "super small hints like TYPOs", mySettingsState.other
     ))
 
-    private val hideListComponent = HideListComponent(mySettingsState.ignoreList, hideListParser)
+    private val hideListComponent = HideListComponent(mySettingsState.hideList, hideListParser)
 
     fun createComponent(): JComponent {
         val components = mutableListOf<MyComponent>()
@@ -64,16 +65,20 @@ class SettingsComponentService(
     fun currentState(): SettingsState {
         val settingsState = SettingsState()
 
-        val uiNumberOfWhitespaces = numberOfWhiteSpacesComponent.numberOfWhitespaces.toIntOrNull()
-                ?: DefaultSettingsList.NUMBER_OF_WHITESPACES.also {
-                    numberOfWhiteSpacesComponent.numberOfWhitespaces = DefaultSettingsList.NUMBER_OF_WHITESPACES.toString() }
+        var uiNumberOfWhitespaces: Int? = numberOfWhiteSpacesComponent.numberOfWhitespaces.toIntOrNull()
+        printlnError("uiNumberOfWhitespaces: " + uiNumberOfWhitespaces.toString())
+
+        if (uiNumberOfWhitespaces == null) {
+            printlnError("uiNumberOfWhitespaces = null")
+            uiNumberOfWhitespaces = DefaultSettingsList.NUMBER_OF_WHITESPACES
+            numberOfWhiteSpacesComponent.numberOfWhitespaces = DefaultSettingsList.NUMBER_OF_WHITESPACES.toString()
+        }
 
         val uiIgnoreList = hideListParser.parseToList(hideListComponent.hideList)
         hideListComponent.hideList = hideListParser.parseToString(uiIgnoreList)
 
-
         settingsState.numberOfWhitespaces = uiNumberOfWhitespaces
-        settingsState.ignoreList = uiIgnoreList
+        settingsState.hideList = uiIgnoreList
 
         settingsState.error = SettingsState.ErrorTypeSettingsState(errorTypeComponent.typeSettingsState())
         settingsState.warning = SettingsState.ErrorTypeSettingsState(warningTypeComponent.typeSettingsState())

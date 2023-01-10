@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 @State(name = "com.github.ioannuwu.errorlens.data.MySettingsState",
         storages = @Storage("com.github.ioannuwu.errorlens.settings.xml"))
-public class DataSettingsService implements PersistentStateComponent<SettingsState> {
+public class DataSettingsService implements AbstractDataSettingsService {
 
     private final SettingsState myState = new SettingsState();
 
