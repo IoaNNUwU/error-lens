@@ -1,30 +1,21 @@
 package com.github.ioannuwu.errorlens.domain.settings
 
 import com.github.ioannuwu.errorlens.data.DataSettingsService
-import com.github.ioannuwu.errorlens.domain.HideListParser
-import com.github.ioannuwu.errorlens.ui.SettingsComponentService
+import com.github.ioannuwu.errorlens.ui.settings.SettingsComponent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.options.Configurable
 import javax.swing.JComponent
 
 class MyErrorConfigurable : Configurable {
 
-    private val domainSettingsService: DomainSettingsService
+    private val dataSettingsService = ApplicationManager.getApplication().getService(DataSettingsService::class.java)!!
+    private val settingsComponent = SettingsComponent.Main(dataSettingsService)
 
-    init {
-        val dataSettingsService = ApplicationManager.getApplication().getService(DataSettingsService::class.java)
-        domainSettingsService = DomainSettingsService(dataSettingsService,
-                SettingsComponentService(dataSettingsService, HideListParser.DividedByApostropheAndComa()))
-    }
+    override fun createComponent(): JComponent = settingsComponent.component()
 
-    override fun createComponent(): JComponent =
-            domainSettingsService.createComponent()
+    override fun isModified(): Boolean = settingsComponent.hasChanged()
 
-    override fun isModified(): Boolean =
-            domainSettingsService.isModified()
-
-    override fun apply() =
-            domainSettingsService.applyChanges()
+    override fun apply() = dataSettingsService.loadState(settingsComponent.getState())
 
     override fun getDisplayName(): String = "Error Lens Settings"
 }

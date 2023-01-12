@@ -1,5 +1,6 @@
 package com.github.ioannuwu.errorlens.domain
 
+import com.github.ioannuwu.errorlens.domain.settings.HideListParser
 import junit.framework.TestCase
 import org.junit.Test
 
